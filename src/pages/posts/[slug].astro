@@ -1,0 +1,75 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  const sortedPosts = posts.sort(
+    (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+  );
+  
+  return sortedPosts.map((post, index) => ({
+    params: { slug: post.slug },
+    props: { 
+      post,
+      number: sortedPosts.length - index,
+    },
+  }));
+}
+
+const { post, number } = Astro.props;
+const { Content } = await post.render();
+---
+
+<Layout title={`${post.data.title} | arpeggio's`} description={post.data.description}>
+  <article>
+    <header class="post-header">
+      <span class="post-number">arpeggio #{number}</span>
+      <h1>{post.data.title}</h1>
+      <time datetime={post.data.date.toISOString()}>
+        {post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+      </time>
+    </header>
+    
+    <div class="content">
+      <Content />
+    </div>
+  </article>
+
+  <nav class="back-nav">
+    <a href="/">&larr; All posts</a>
+  </nav>
+</Layout>
+
+<style>
+  .post-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .post-number {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    font-family: monospace;
+  }
+
+  h1 {
+    margin: 0.5rem 0;
+    font-size: 2rem;
+  }
+
+  time {
+    color: var(--text-muted);
+  }
+
+  .content {
+    line-height: 1.8;
+  }
+
+  .back-nav {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+</style>

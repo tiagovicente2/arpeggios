@@ -1,0 +1,78 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('posts')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+const postsWithNumbers = posts.map((post, index) => ({
+  ...post,
+  number: posts.length - index,
+}));
+---
+
+<Layout title="arpeggio's">
+  <section class="intro">
+    <p>Hello there! I'm arpeggio.</p>
+    <p>This is my space for thoughts, notes, and findings.</p>
+  </section>
+
+  <section class="posts">
+    {postsWithNumbers.map((post) => (
+      <a href={`/posts/${post.slug}`} class="post-item">
+        <span class="post-number">arpeggio #{post.number}</span>
+        <h2 class="post-title">{post.data.title}</h2>
+        <time datetime={post.data.date.toISOString()}>
+          {post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+        </time>
+      </a>
+    ))}
+  </section>
+</Layout>
+
+<style>
+  .intro {
+    margin-bottom: 3rem;
+  }
+
+  .intro p {
+    color: var(--text-muted);
+  }
+
+  .posts {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .post-item {
+    display: block;
+    padding: 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+
+  .post-item:hover {
+    background: var(--border);
+    text-decoration: none;
+  }
+
+  .post-number {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    font-family: monospace;
+  }
+
+  .post-title {
+    margin: 0.25rem 0;
+    font-size: 1.25rem;
+    color: var(--text);
+  }
+
+  time {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+  }
+</style>
