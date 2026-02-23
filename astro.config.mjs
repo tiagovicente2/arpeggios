@@ -3,7 +3,6 @@ import svelte from '@astrojs/svelte';
 
 export default defineConfig({
   integrations: [svelte()],
-  site: 'https://tiagovicente2.github.io',
-  base: '/arpeggios',
+  site: 'https://tiagovicente2.github.io/arpeggios',
   output: 'static',
 });
