@@ -24,14 +24,8 @@ jobs:
 
       - name: Build
         run: bun run build
-
-      - name: Add base path to internal links
-        run: |
-          BASE="/arpeggios"
-          # Rewrite href attributes in HTML files
-          find dist -name "*.html" -exec sed -i "s|href=\"/|href=\"${BASE}/|g" {} \;
-          # Fix double slashes
-          find dist -name "*.html" -exec sed -i "s|${BASE}//|${BASE}|g" {} \;
+        env:
+          BASE_PATH: /arpeggios
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
