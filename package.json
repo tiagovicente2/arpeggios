@@ -5,12 +5,17 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "lint": "biome lint .",
+    "format": "biome format --write ."
   },
   "dependencies": {
     "@astrojs/svelte": "^7.2.5",
     "astro": "^5.17.3",
     "svelte": "^5.53.2",
     "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.4"
   }
 }
