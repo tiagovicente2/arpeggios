@@ -7,6 +7,8 @@ export async function GET(context) {
     (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
   );
 
+  const baseUrl = context.site ? new URL(import.meta.env.BASE_URL || '/', context.site).toString() : '';
+
   return rss({
     title: "arpeggio's",
     description: "Thoughts, notes, and findings",
@@ -15,7 +17,7 @@ export async function GET(context) {
       title: post.data.title,
       pubDate: post.data.date,
       description: post.data.description,
-      link: `/posts/${post.slug}/`,
+      link: `${baseUrl}posts/${post.slug}/`,
     })),
   });
 }

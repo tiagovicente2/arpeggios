@@ -1,12 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const baseUrl = import.meta.env.BASE_URL ? import.meta.env.BASE_URL.replace(/([^/])$/, '$1/') : '/';
 ---
 
 <Layout title="404 - Page Not Found | arpeggio's">
   <div class="not-found">
     <h1>404</h1>
     <p>Oops! This page doesn't exist.</p>
-    <a href="/">← Go back home</a>
+    <a href={baseUrl}>← Go back home</a>
   </div>
 </Layout>
 
