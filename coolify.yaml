@@ -1,0 +1,12 @@
+version: '1.0'
+
+resources:
+  - name: arpeggios
+    type: static
+    repository: https://github.com/tiagovicente2/arpeggios
+    branch: main
+    build:
+      enabled: true
+      command: bun install && bun run build
+      workdir: .
+      output: dist
