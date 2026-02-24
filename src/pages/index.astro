@@ -10,8 +10,6 @@ const postsWithNumbers = posts.map((post, index) => ({
   ...post,
   number: posts.length - index,
 }));
-
-const baseUrl = import.meta.env.BASE_URL ? import.meta.env.BASE_URL.replace(/([^/])$/, '$1/') : '/';
 ---
 
 <Layout title="arpeggio's">
@@ -22,7 +20,7 @@ const baseUrl = import.meta.env.BASE_URL ? import.meta.env.BASE_URL.replace(/([^
 
   <section class="posts">
     {postsWithNumbers.map((post) => (
-      <a href={`${baseUrl}posts/${post.slug}`} class="post-item">
+      <a href={`/posts/${post.slug}`} class="post-item">
         <span class="post-number">arpeggio #{post.number}</span>
         <h2 class="post-title">{post.data.title}</h2>
         <time datetime={post.data.date.toISOString()}>

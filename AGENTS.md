@@ -247,10 +247,7 @@ Post content here...
 
 ## Environment Variables
 
-- `BASE_URL`: Base URL for the site (important for GitHub Pages deployment)
-- Used in components via `import.meta.env.BASE_URL`
-
----
+This project currently doesn't require environment variables for deployment.
 
 ## Testing Changes
 

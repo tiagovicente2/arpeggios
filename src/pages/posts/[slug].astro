@@ -17,9 +17,6 @@ export async function getStaticPaths() {
 
 const { post, number } = Astro.props;
 const { Content } = await post.render();
-const baseUrl = import.meta.env.BASE_URL 
-  ? import.meta.env.BASE_URL.replace(/([^/])$/, '$1/') 
-  : '/';
 ---
 
 <Layout title={`${post.data.title} | arpeggio's`} description={post.data.description}>
@@ -38,7 +35,7 @@ const baseUrl = import.meta.env.BASE_URL
   </article>
 
   <nav class="back-nav">
-    <a href={baseUrl}>&larr; home</a>
+    <a href="/">&larr; home</a>
   </nav>
 </Layout>
 

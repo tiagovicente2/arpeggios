@@ -7,7 +7,7 @@ interface Props {
 }
 
 const { title, description = "arpeggio's blog - thoughts, notes, and findings" } = Astro.props;
-const baseUrl = import.meta.env.BASE_URL ? import.meta.env.BASE_URL.replace(/([^/])$/, '$1/') : '/';
+const baseUrl = '/';
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
