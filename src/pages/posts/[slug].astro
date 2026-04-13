@@ -2,6 +2,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 
 import Layout from '../../layouts/Layout.astro';
+import { formatDate } from '@/utils/date';
 import { formatReadingTime, getReadingTime } from '@/utils/reading-time';
 
 export async function getStaticPaths() {
@@ -24,52 +25,78 @@ interface Props {
 
 const { post, number } = Astro.props as Props;
 const { Content } = await post.render();
+const formattedDate = formatDate(post.data.date);
 const readingTime = formatReadingTime(getReadingTime(post.body));
 ---
 
 <Layout title={`${post.data.title} | arpeggio's`} description={post.data.description}>
   <article>
     <header class="post-header">
-      <span class="post-number">arpeggio #{number}</span>
+      <div class="post-top-row">
+        <a href="/" class="back-link">&larr; home</a>
+        <span class="post-number" aria-label={`arpeggio #${number}`}>
+          #{number}
+        </span>
+      </div>
+
       <h1>{post.data.title}</h1>
+
       <div class="post-meta">
-        <time datetime={post.data.date.toISOString()}>
-          {post.data.date.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-          })}
-        </time>
+        <time datetime={formattedDate}>{formattedDate}</time>
         <span aria-hidden="true">·</span>
         <span>{readingTime}</span>
       </div>
     </header>
-    
+
     <div class="content">
       <Content />
     </div>
   </article>
-
-  <nav class="back-nav">
-    <a href="/">&larr; home</a>
-  </nav>
 </Layout>
 
 <style>
+  article {
+    margin-top: -1.5rem;
+  }
+
   .post-header {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    width: 100%;
     margin-bottom: 2rem;
     padding-bottom: 1.5rem;
     border-bottom: 1px solid var(--border);
   }
 
+  .post-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  .back-link,
   .post-number {
-    font-size: 0.875rem;
     color: var(--text-muted);
     font-family: monospace;
+    font-size: 0.875rem;
+  }
+
+  .back-link:hover {
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .post-number {
+    white-space: nowrap;
   }
 
   h1 {
-    margin: 0.5rem 0;
+    width: 100%;
+    margin: 0;
     font-size: 2rem;
   }
 
@@ -77,6 +104,7 @@ const readingTime = formatReadingTime(getReadingTime(post.body));
     display: flex;
     align-items: center;
     gap: 0.4rem;
+    width: 100%;
     color: var(--text-muted);
   }
 
@@ -84,9 +112,4 @@ const readingTime = formatReadingTime(getReadingTime(post.body));
     line-height: 1.8;
   }
 
-  .back-nav {
-    margin-top: 3rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--border);
-  }
 </style>
