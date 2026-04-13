@@ -1,14 +1,17 @@
 ---
-import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
+
+import Layout from '../layouts/Layout.astro';
+import { formatReadingTime, getReadingTime } from '@/utils/reading-time';
 
 const posts = (await getCollection('posts')).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
 );
 
 const postsWithNumbers = posts.map((post, index) => ({
-  ...post,
+  post,
   number: posts.length - index,
+  readingTime: formatReadingTime(getReadingTime(post.body)),
 }));
 ---
 
@@ -19,13 +22,21 @@ const postsWithNumbers = posts.map((post, index) => ({
   </section>
 
   <section class="posts">
-    {postsWithNumbers.map((post) => (
+    {postsWithNumbers.map(({ post, number, readingTime }) => (
       <a href={`/posts/${post.slug}`} class="post-item">
-        <span class="post-number">arpeggio #{post.number}</span>
+        <span class="post-number">arpeggio #{number}</span>
         <h2 class="post-title">{post.data.title}</h2>
-        <time datetime={post.data.date.toISOString()}>
-          {post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
-        </time>
+        <div class="post-meta">
+          <time datetime={post.data.date.toISOString()}>
+            {post.data.date.toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+            })}
+          </time>
+          <span aria-hidden="true">·</span>
+          <span>{readingTime}</span>
+        </div>
       </a>
     ))}
   </section>
@@ -71,7 +82,10 @@ const postsWithNumbers = posts.map((post, index) => ({
     color: var(--text);
   }
 
-  time {
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
     font-size: 0.875rem;
     color: var(--text-muted);
   }

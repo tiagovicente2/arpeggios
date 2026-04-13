@@ -1,6 +1,8 @@
 ---
+import { getCollection, type CollectionEntry } from 'astro:content';
+
 import Layout from '../../layouts/Layout.astro';
-import { getCollection } from 'astro:content';
+import { formatReadingTime, getReadingTime } from '@/utils/reading-time';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
@@ -15,8 +17,14 @@ export async function getStaticPaths() {
   }));
 }
 
-const { post, number } = Astro.props;
+interface Props {
+  post: CollectionEntry<'posts'>;
+  number: number;
+}
+
+const { post, number } = Astro.props as Props;
 const { Content } = await post.render();
+const readingTime = formatReadingTime(getReadingTime(post.body));
 ---
 
 <Layout title={`${post.data.title} | arpeggio's`} description={post.data.description}>
@@ -24,9 +32,17 @@ const { Content } = await post.render();
     <header class="post-header">
       <span class="post-number">arpeggio #{number}</span>
       <h1>{post.data.title}</h1>
-      <time datetime={post.data.date.toISOString()}>
-        {post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-      </time>
+      <div class="post-meta">
+        <time datetime={post.data.date.toISOString()}>
+          {post.data.date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          })}
+        </time>
+        <span aria-hidden="true">·</span>
+        <span>{readingTime}</span>
+      </div>
     </header>
     
     <div class="content">
@@ -57,7 +73,10 @@ const { Content } = await post.render();
     font-size: 2rem;
   }
 
-  time {
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
     color: var(--text-muted);
   }
 
